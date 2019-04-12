@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "331263367574",
+    "firebase_url": "https://onedrinkflutter.firebaseio.com",
+    "project_id": "onedrinkflutter",
+    "storage_bucket": "onedrinkflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331263367574:android:543b5186a5a93a1e",
+        "android_client_info": {
+          "package_name": "com.onedrink.flutterdrinkapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331263367574-d1u15sbpp0tqf9m7k2uu9qu1c8jje2kt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkT_StGxeT1a3fe06Lo7zaV5rwgfOOxhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331263367574-d1u15sbpp0tqf9m7k2uu9qu1c8jje2kt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
