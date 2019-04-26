@@ -32,11 +32,32 @@ class _HomeState extends State<Home> {
   bool _success = true;
   String _errorMessage;
 
+  Future<List<User>> fetchUsersFromGitHub() async {
+    final response = await http.get('https://api.github.com/users');
+    print('here');
+    var responseJson = json.decode(response.body.toString());
+    List<User> userList = createUserList(responseJson);
+    return userList;
+  }
+
+  List<User> createUserList(List data) {
+    List<User> list = [];
+    for (int i = 0; i < data.length; i++) {
+      String title = data[i]["login"];
+      int id = data[i]["id"];
+      User movie = new User(name: title, id: id);
+      list.add(movie);
+    }
+    return list;
+  }
+
   final cards = List.generate(20, (i) => CardView());
 
   @override
   void initState() {
     super.initState();
+    var users = fetchUsersFromGitHub();
+    print(users);
   }
 
   int _count = 0;
@@ -53,34 +74,31 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('OneDrink'),
-        actions: <Widget>[
-          FlatButton(
-              child: Text('Logout', style: TextStyle(fontSize: 17.0)),
-              onPressed: _signOut),
-        ],
-      ),
-      body: Center(
-          child: GridView.count(
-              crossAxisCount: 2,
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 20.0),
-              children: cards)),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 50.0,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('OneDrink'),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('Logout', style: TextStyle(fontSize: 17.0)),
+                onPressed: _signOut),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() {
-              _count++;
-            }),
-        tooltip: 'Increment Counter',
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
+        body: Center(
+          child: new FutureBuilder<List<User>>(
+              future: fetchUsersFromGitHub(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return new GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 20.0),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return CardView();
+                      });
+                }
+              }),
+        ));
   }
 }
 
@@ -98,25 +116,6 @@ class CardViewState extends State<CardView>
   AnimationController controller;
   double _cardBannerHeight = 0.1;
   double _cardImageScale = 0.6;
-
-  Future<List<User>> fetchUsersFromGitHub() async {
-    final response = await http.get('https://randomuser.me/api/?page=1&results=10');
-    print('here');
-    var responseJson = json.decode(response.body.toString());
-    List<User> userList = createUserList(responseJson);
-    return userList;
-  }
-
-  List<User> createUserList(List data) {
-    List<User> list = new List();
-    for (int i = 0; i < data.length; i++) {
-      String title = data[i]["login"];
-      int id = data[i]["id"];
-      User movie = new User(name: title, id: id);
-      list.add(movie);
-    }
-    return list;
-  }
 
   void initState() {
     controller =
@@ -136,8 +135,6 @@ class CardViewState extends State<CardView>
         _cardImageScale = scaleAnimation.value;
       });
     });
-
-    var users = fetchUsersFromGitHub();
   }
 
   @override
