@@ -103,6 +103,8 @@ class _HomeState extends State<Home> {
 }
 
 class CardView extends StatefulWidget {
+
+  // TODO RECUPERER PARAMETRE DE USER ICI POUR ALIMENTER LES CARTES
   @override
   CardViewState createState() {
     return new CardViewState();
