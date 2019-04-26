@@ -1,4 +1,4 @@
-import 'package:flutter_drink_app/pages/root_page.dart';
+import 'package:flutter_drink_app/Widgets/Root.dart';
 import 'package:flutter_drink_app/services/authentication.dart';
 import 'package:flutter/material.dart';
 

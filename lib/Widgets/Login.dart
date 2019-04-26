@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_drink_app/services/authentication.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
@@ -143,6 +144,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           child: new ListView(
             shrinkWrap: true,
             children: <Widget>[
+              _showLogo(),
               _showEmailInput(),
               _showPasswordInput(),
               _showPrimaryButton(),
@@ -152,6 +154,61 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           ),
         ));
   }
+
+  Widget _showLogo(){
+    if(_success == null){
+      return new Hero(
+        tag: 'logo',
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 75.0,
+            child: new FlareActor("assets/plage.flr",
+              alignment:Alignment.center,
+              fit:BoxFit.contain,
+              animation:"Neutre",
+              isPaused: false,
+            ),
+          ),
+        ),
+      );
+    }else if(_success == true){
+      return new Hero(
+        tag: 'globe',
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 100.0,
+            child: new FlareActor("assets/plage.flr",
+              alignment:Alignment.center,
+              fit:BoxFit.contain,
+              animation:"Neutre",
+              isPaused: false,
+            ),
+          ),
+        ),
+      );
+    } else if(_success == false){
+      return new Hero(
+        tag: 'globe',
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 100.0,
+            child: new FlareActor("assets/plage.flr",
+              alignment:Alignment.center,
+              fit:BoxFit.contain,
+              animation:"Chute",
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
 
 
   Widget _showErrorMessage() {
