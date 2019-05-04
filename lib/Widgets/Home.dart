@@ -22,8 +22,9 @@ class Home extends StatefulWidget {
 class User {
   String name;
   int id;
+  String avatar;
 
-  User({this.name, this.id});
+  User({this.name, this.id, this.avatar});
 }
 
 class _HomeState extends State<Home> {
@@ -34,7 +35,6 @@ class _HomeState extends State<Home> {
 
   Future<List<User>> fetchUsersFromGitHub() async {
     final response = await http.get('https://api.github.com/users');
-    print('here');
     var responseJson = json.decode(response.body.toString());
     List<User> userList = createUserList(responseJson);
     return userList;
@@ -45,18 +45,18 @@ class _HomeState extends State<Home> {
     for (int i = 0; i < data.length; i++) {
       String title = data[i]["login"];
       int id = data[i]["id"];
-      User movie = new User(name: title, id: id);
+      String avatar = data[i]["avatar_url"];
+      User movie = new User(name: title, id: id, avatar: avatar);
       list.add(movie);
     }
     return list;
   }
 
-  final cards = List.generate(20, (i) => CardView());
 
   @override
   void initState() {
     super.initState();
-    var users = fetchUsersFromGitHub();
+    final users = fetchUsersFromGitHub();
     print(users);
   }
 
@@ -69,6 +69,11 @@ class _HomeState extends State<Home> {
     } catch (e) {
       print(e);
     }
+  }
+  Widget get _loadingView {
+    return new Center(
+      child: new CircularProgressIndicator(),
+    );
   }
 
   @override
@@ -94,8 +99,10 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 20.0),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        return CardView();
+                        return CardView(user : snapshot.data[index]);
                       });
+                }else{
+                  return _loadingView;
                 }
               }),
         ));
@@ -104,15 +111,17 @@ class _HomeState extends State<Home> {
 
 class CardView extends StatefulWidget {
 
-  // TODO RECUPERER PARAMETRE DE USER ICI POUR ALIMENTER LES CARTES
+  final User user;
+  CardView({Key key, @required this.user}) : super(key: key);
+
+
   @override
   CardViewState createState() {
     return new CardViewState();
   }
 }
 
-class CardViewState extends State<CardView>
-    with SingleTickerProviderStateMixin {
+class CardViewState extends State<CardView> with SingleTickerProviderStateMixin {
   Animation<double> heightAnimation;
   Animation<double> scaleAnimation;
   AnimationController controller;
@@ -158,7 +167,7 @@ class CardViewState extends State<CardView>
             child: FadeInImage.memoryNetwork(
               fit: BoxFit.fill,
               placeholder: kTransparentImage,
-              image: 'https://placeimg.com/640/480/any',
+              image: '${widget.user.avatar}',
             ),
           ),
         ),
@@ -170,7 +179,7 @@ class CardViewState extends State<CardView>
               alignment: FractionalOffset.center,
               margin: const EdgeInsets.only(left: 5, right: 5),
               decoration: BoxDecoration(color: Colors.green),
-              child: Text('Sarah',
+              child: Text('${widget.user.name}',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
